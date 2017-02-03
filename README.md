@@ -39,10 +39,10 @@
 <p style="text-align:center">그림5. 개인정보변경 화면</p>
 
 ![room](https://dl.dropbox.com/s/yb8pgj07ult1tmh/room.png)
-<p style="text-align:center">그림5. 게임 방 화면</p>
+<p style="text-align:center">그림6. 게임 방 화면</p>
 
 ![game](https://dl.dropbox.com/s/834prpungy784z8/game.png)
-<p style="text-align:center">그림5. 게임 화면</p>
+<p style="text-align:center">그림7. 게임 화면</p>
 
 ### DB
 * 기본키는 시퀀스.nextval로 회원의 고유번호를 부여합니다.
