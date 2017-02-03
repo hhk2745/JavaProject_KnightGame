@@ -19,130 +19,160 @@
 
 
 ### 회원관련 화면
-프로그램 실행시 나타나는 로그인화면, 회원가입, Id/pw 찾기 화면
+프로그램 실행시 나타나는 로그인, 회원가입, Id/pw 찾기 화면
 
-![board list](https://dl.dropbox.com/s/hdlpm33e6ftuzo0/signin.png)
+![signin](https://dl.dropbox.com/s/hdlpm33e6ftuzo0/signin.png)
 <p style="text-align:center">그림1. 로그인 화면</p>
 
-![board content](https://dl.dropboxusercontent.com/u/31464666/blog/php-portfolio/board_v1_content.jpg)
-<p style="text-align:center">그림2. 게시판 내용 출력</p>
+![signup](https://dl.dropbox.com/s/14ev6rn2m8jf140/signup.png)
+<p style="text-align:center">그림2. 회원가입 화면</p>
 
-### 데이터베이스 설계
-다음으로 데이터 저장을 위해 데이터베이스에 테이블 생성을 하겠습니다.
+![find_id](https://dl.dropbox.com/s/8typa6zo1qtgsi9/find_id.png)
+<p style="text-align:center">그림3. Id/Pw찾기 화면</p>
 
+### 게임 화면
+로그인 시 나타나는 게임로비, 개인정보변경, 게임 방, 게임 화면
+
+![lobby](https://dl.dropbox.com/s/gpihlpls2j7xrqg/lobby.png)
+<p style="text-align:center">그림4. 게임로비 화면</p>
+
+![modify_info](https://dl.dropbox.com/s/x3gtw165gdlpw9q/modify_info.png)
+<p style="text-align:center">그림5. 개인정보변경 화면</p>
+
+![room](https://dl.dropbox.com/s/yb8pgj07ult1tmh/room.png)
+<p style="text-align:center">그림5. 게임 방 화면</p>
+
+![game](https://dl.dropbox.com/s/834prpungy784z8/game.png)
+<p style="text-align:center">그림5. 게임 화면</p>
+
+### DB
+* 기본키는 시퀀스.nextval로 회원의 고유번호를 부여합니다.
 ```sql
-CREATE TABLE board (
-    no INT UNSIGNED NOT NULL AUTO_INCREMENT,
-	title VARCHAR(255) NOT NULL,
-    content TEXT NOT NULL,
-    user_id VARCHAR(255) NOT NULL,
-    created_date INT UNSIGNED NOT NULL,
-    modified_date INT UNSIGNED,
-    deleted_date INT UNSIGNED,
-    readed_count MEDIUMINT NOT NULL,
-    enabled BOOLEAN NOT NULL,
-    PRIMARY KEY(no)
+CREATE TABLE "USER"."MEMBER"
+(
+   "NUM" NUMBER,
+   "ID" VARCHAR2(25 BYTE) NOT NULL,
+   "PW" VARCHAR2(25 BYTE) NOT NULL,
+   "email" VARCHAR2(50 BYTE) NOT NULL,
+   "regdate" VARCHAR2(8 BYTE) NOT NULL
+   CONSTRAINT PK_USERS PRIMARY KEY(NUM)
 );
 ```
 
-* 게시판의 기본적인 기능만을 테스트 하기 위해 게시글에 대한 내용만 저장하는 테이블을 만들었습니다.
-* date 컬럼 들을 int 타입으로 하였는데 이는 다른 데이터 베이스로 전환시 데이터의 호환성을 위해 작성하였습니다.
+### 주요 클래스 설명
+변형체스게임을 구성하는 클래스에 대한 설명입니다.
+MVC에 대한 개념이 없을 때 개발되어 java코드내에 SQL문이 직접 하드코딩 되어 있습니다.
+데이터베이스 접속은 ojdbc6을 라이브러리에 추가하여 연동합니다.
+READEME.md가 너무 길어지는 것 같아 주요 소스(Server, Client)만 설명드린 점 양해 부탁드립니다.
+전체 소스를 보고 싶으신분은 [github](https://github.com/hhk2745/JavaProject_Movie-KnightGame) 저장소에서 확인 하실 수 있습니다. 로컬에서 동작하는 프로그램이므로 Oracle 설치, 테이블 생성 후 실행 시켜야 합니다.
 
-### CRUD 를 위한 클래스 설계
-데이터의 CRUD를 위하여 데이터를 처리하는 서비스 클래스를 설계 하겠습니다.
-게시판 v1 을 설계 하면서 생각한 것이 모델과 컨트롤러 뷰의 분리에 중점을 두고 설계하였고 데이터베이스와의 통신은 전적으로 서비스 클래스만을 이용하여 처리 하였습니다.
-쿼리에 대해서는 별도의 파일로 작성하여 쿼리의 변경에 따른 부담을 최소화 하였습니다.
-데이터베이스 접속 정보도 별도의 파일로 관리를 하게 됩니다.
-그럼 하나씩 코드를 살펴 보겠습니다. 참고로 너무 내용이 길어지는것을 방지 하기 위해 모든 소스의 전체 내용을 보여드리지는 않습니다. 전체 소스를 보고 싶으신분은 [github](https://github.com/Hana-Lee/php-portfolio) 저장소에서 확인 하실 수 있습니다. 물론 내려받아서 실행까지 해볼 수도 있습니다.
-
-* 게시판 Article 모델 클래스 입니다.
-
-```php
-<?php
-class BoardArticle {
-	public $no;
-	public $title;
-	public $content;
-	public $user_id;
-	public $created_date;
-	public $modified_date;
-	public $deleted_date;
-	public $readed_count;
-	public $enabled;
+* 사용자의 상태를 나타내는 DemandChart 인터페이스 입니다.
+```java
+public interface DemandChart
+{
+	public static final int LOGOUT = -2;
+	public static final int LOGIN = 0;
+	public static final int CHANGE_USER_LOCATION = 1;
+	public static final int CHATTING = 2;
+	public static final int UPDATE_USERCHART = 3;
+	public static final int READY = 4;
+	public static final int GAME_START = 5;
+	public static final int SENDING_BOARD = 6;
+	public static final int TURN_CHANGE = 7;
+	public static final int END_GAME = 8;
 }
-?>
 ```
 
-* 데이터베이스와 통신을하는 DAO 서비스 클래스 (PDO 를 사용하여 Object Mapping 을 합니다)
+* Server
 
-```php
-<?php
-class BoardService {
-	// return_type 으로 article 클래스의 이름을 적어주면 article 오브젝트가 리턴됩니다.
-    public static function query($query, $params=NULL, $return_type=NULL){}
-    // update, insert, delete 를 위한 공통 함수 입니다.
-    public static function update($query, $params=NULL) {}
-    private static function setParameters($stmt, $params) {}
-    private static function getPDO() {}
-?>
-```
+```java
+class ServerReceiver extends Thread implements DemandChart
+{
+	HashMap<MemberDTO, ObjectOutputStream> clients;
+	HashMap<Integer, HashMap<MemberDTO, Boolean>> roomInfo;
+	ObjectOutputStream oos;
+	ObjectInputStream ois;
+  public ServerReceiver(Socket socket, HashMap<MemberDTO, ObjectOutputStream> clients,
+			HashMap<Integer, HashMap<MemberDTO, Boolean>> roomInfo){}
+  @Override
+	public void run(){}
+  synchronized public void process(Demand demand) throws IOException{}
 
-* 뷰에 데이터를 전달해주는 컨트롤러 클래스 입니다.
+  public class KnightGameServer
+  {
+  	HashMap<MemberDTO, ObjectOutputStream> clients = new HashMap<>();
+  	HashMap<Integer, HashMap<MemberDTO, Boolean>> roomInfo = new HashMap<>();
 
-```php
-<?php
-class BoardController {
-	function readArticle($b_no) {}
-	function readAllArticle($page_no=1) {}
-	function createArticle($article) {}
-	function updateArticle($article) {}
-	function deleteArticle($article) {}
-	function getTotalArticleCount() {}
+  	public KnightGameServer()
+  	{
+  		try
+  		{
+  			ServerSocket serverSocket = new ServerSocket(12345);
+  			while (true)
+  			{
+  				Socket socket = serverSocket.accept();
+  				System.out.println(">> Accept LOG :::: " + socket);
+  				new ServerReceiver(socket, clients, roomInfo).start();
+  			}
+  		} catch (Exception e){e.printStackTrace();}
+  	}
+  	public static void main(String[] args)
+  	{
+  		new KnightGameServer();
+  	}
+  }
 }
-?>
 ```
 
-* 쿼리를 관리하는 PHP 파일입니다.
+* Client
 
-```php
-<?php
-$query['selectAllArticle'] = 'SELECT * FROM board INNER JOIN
-(SELECT * FROM board ORDER BY no DESC LIMIT :start, :count) AS b USING(no)';
+```Java
+public class KnightGameClient implements DemandChart, KnightGameInfo
+{
+	public ClientSender sender;
+	public ClientReceiver receiver;
+	public ObjectOutputStream oos;
+	public ObjectInputStream ois;
+	public MemberDTO user;
+	public MemberDAO dao;
+	public LoginGUI login;
+	public LobbyGUI lobby;
+	public RoomGUI room;
+	public KnightGameMain main;
+	public JTextArea chatArea;
+	public JTextField chat;
+	public JButton logout;
+	public Vector<MemberDTO> userChart;
+	public boolean start = false;
 
-$query['selectArticleByNo'] = 'SELECT * FROM board WHERE no = :no';
+	public KnightGameClient(){}
+	class ClientSender{}
+	class ClientReceiver extends Thread
+  {
+		public ObjectInputStream ois;
+		public ClientReceiver(ObjectInputStream ois){}
+		@Override
+		public void run(){}
+		public void process(Result result) throws IOException{}
+	}
 
-$query['createArticle'] = 'INSERT INTO board VALUES (
-NULL, :title, :content, :user_id, :c_date, 0, 0, 1, 1
-)';
+	LoginGUI newLogin(String str) throws IOException
+  {
+		login.loginBtn.addActionListener(new ActionListener() {});
+		return login;
+	}
 
-$query['updateArticle'] = 'UPDATE board SET
-title = :title, content = :content, modified_date = :m_date
-WHERE no = :no AND user_id = :user_id';
-
-$query['deleteArticle'] = 'DELETE FROM board WHERE no = :no AND user_id = :user_id';
-
-$query['selectArticleCount'] = 'SELECT COUNT(*) AS CNT FROM board';
-?>
-```
-
-* 데이터베이스 접속 관리 PHP 파일입니다.
-
-```php
-<?php
-$db['username'] = 'root';
-$db['password'] = 'root';
-$db['hostname'] = 'localhost';
-$db['database'] = 'portfolio';
-?>
+	public static void main(String[] args)
+  {
+		new KnightGameClient();
+	}
+}
 ```
 
 ### 후기
 
-위와 같은 설계 구조를 가지고 가장 간단한 게시판을 만들어 봤습니다.
-게시판은 아마도 가장 많이 사용되면서도 가장 생각을 많이 하게 만드는게 아닌가 생각됩니다.
-개인적으로 bootstrap 을 이용하면서 디자인에 대한 고민을 많이 하지 않아도 되었던것과 PHP 와 같은 스크립트 언어의 장점인 수정 후 확인까지 딜레이가 없이 바로바로 된다는게 참 좋았던것 같습니다.
-PHP 에는 웹 어플리케이션을 만들때 편리한 함수들이 미리 정의되어 있던것도 좋았습니다. 다만 손에 익숙하지 않아서 그런지 <?php ?> 이렇게 쓰는것과 변수선언때 $를 쓰는게 좀 힘들었습니다.
-오랫동안 자바로 웹 개발을 하다 PHP 를 이용하여 게시판을 만들어 보았는데 서로 장단이 있는것 같습니다.
-그리고 PHP 에 대하여 안좋은 이야기들을 인터넷상에서 본적이 있는데 그들이 하는 말에도 일리가 있긴 하지만 PHP 가 그들이 말하는것처럼 못쓸 언어라면 진즉에 없어지거나 거의 사용되지 않았겠지요.
-하지만 여전히 제가 생각했던것보다 많은곳에서 PHP 를 주력으로 사용하는곳이 많다는건 그만큼 PHP 가 생각보다는 쓸만하고 PHP 에 대한 대안이 없다는 반증이 아닐까 조심스럽게 생각해봅니다.
-이제 간단한 게시판 v1 을 완성하였으니 다음에는 외부 편집기를 도입하고, 로그인을 구현한 조금 더 보강된 게시판 v2 를 만들어 보도록 하겠습니다.
+위와 같이 java로 소켓 프로그래밍을 개발해 보았습니다.
+객체직렬화를 하기 위해 Serializable 인터페이스를 구현 하였고,
+ObjectInputStream,ObjectOutputStream클래스는 readObject(), writeObject()를 통해 객체를 입출력 하기 위해 사용되었습니다.
+게임 방에 입장하는 부분에서 동기화가 필요했는데 ArrayList에 DTO를 담아서 전송하니 리스트 내의 모든 DTO가 index 0번의 정보로 복사되어 애를 먹었습니다... 레퍼런스를 참조하여 동기화를 보장하지 않는 ArrayList 대신에 Vector클래스를 권장 하고 있어 해결할 수 있었습니다.
+디자인패턴에서 Command 패턴을 흉내내서 모든 명령(Demand)를 캡슐화 하여 설계해 보았습니다.
