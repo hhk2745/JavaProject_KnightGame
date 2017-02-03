@@ -1,24 +1,28 @@
-### Java ㅇ
+### Java 변형체스게임
 
 ### 목적
-* CRUD 을 익히는데 도움이 되는 게시판을 PHP 를 이용하여 만듦으로써 PHP 에 대한 지식을 습득
+* java언어로 네트워크 기반 체스게임을 개발
+* DB와 연동하여 데이터를 관리
+* Swing을 사용하여 GUI환경에서 동작
+* 사용자들이 2명 이상 모이는 곳은 채팅이 되어야함
+* 위 항목들을 개발 해봄으로써 java를 학습함.
 
 ### 개발 환경
-* [PHP 5.5.14](http://php.net)
-* [MariaDB](https://www.mariadb.org) (or [MySQL](http://www.mysql.com))
+* [Java SE 1.8](https://www.oracle.com/)
+* [Oracle 11g 64bit](https://www.oracle.com/)
 * [bootstrap 3](http://www.getbootstrap.com)
 
 ### 기능 목록
-* 글 목록 보기
-* 글 작성
-* 글 삭제
-* 글 수정
+* 체스게임
+* 채팅
+* 회원가입, 로그인, ID/Pw찾기, 패스워드 변경
 
-### 기본 화면
-HTML과 bootstrap의 컴포넌트들과 적당한 css 를 이용하여 제일 먼저 게시판의 모양을 만들겠습니다.
 
-![board list](https://dl.dropboxusercontent.com/u/31464666/blog/php-portfolio/board_v1_list.jpg)
-<p style="text-align:center">그림1. 게시글 목록</p>
+### 회원관련 화면
+프로그램 실행시 나타나는 로그인화면, 회원가입, Id/pw 찾기 화면
+
+![board list](https://www.dropbox.com/s/hdlpm33e6ftuzo0/signin.png?dl=0)
+<p style="text-align:center">그림1. 로그인 화면</p>
 
 ![board content](https://dl.dropboxusercontent.com/u/31464666/blog/php-portfolio/board_v1_content.jpg)
 <p style="text-align:center">그림2. 게시판 내용 출력</p>
@@ -111,7 +115,7 @@ $query['createArticle'] = 'INSERT INTO board VALUES (
 NULL, :title, :content, :user_id, :c_date, 0, 0, 1, 1
 )';
 
-$query['updateArticle'] = 'UPDATE board SET 
+$query['updateArticle'] = 'UPDATE board SET
 title = :title, content = :content, modified_date = :m_date
 WHERE no = :no AND user_id = :user_id';
 
