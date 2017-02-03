@@ -10,7 +10,6 @@
 ### 개발 환경
 * [Java SE 1.8](https://www.oracle.com/)
 * [Oracle 11g 64bit](https://www.oracle.com/)
-* [bootstrap 3](http://www.getbootstrap.com)
 
 ### 기능 목록
 * 체스게임
