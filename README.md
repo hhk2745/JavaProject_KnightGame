@@ -21,7 +21,7 @@
 ### 회원관련 화면
 프로그램 실행시 나타나는 로그인화면, 회원가입, Id/pw 찾기 화면
 
-![board list](https://www.dropbox.com/s/hdlpm33e6ftuzo0/signin.png?dl=0)
+![board list](https://dl.dropbox.com/s/hdlpm33e6ftuzo0/signin.png)
 <p style="text-align:center">그림1. 로그인 화면</p>
 
 ![board content](https://dl.dropboxusercontent.com/u/31464666/blog/php-portfolio/board_v1_content.jpg)
